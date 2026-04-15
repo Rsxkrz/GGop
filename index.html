@@ -92,7 +92,7 @@
         .section-title { text-align: center; font-size: 3rem; margin-bottom: 10px; text-transform: uppercase; }
         .section-subtitle { text-align: center; color: var(--text-dim); margin-bottom: 50px; font-size: 1.1rem; }
 
-        /* === LOJA: CARTÕES DE PLANO (EFEITO TILT 3D) === */
+        /* === LOJA: CARTÕES DE PLANO === */
         .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
         
         .plan-card {
@@ -101,7 +101,6 @@
             transition: border 0.3s; display: flex; flex-direction: column;
         }
         
-        /* Borda animada nos cartões */
         .plan-card::before {
             content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; z-index: -1;
             background: linear-gradient(45deg, transparent, var(--theme-color), transparent); border-radius: 22px;
@@ -109,7 +108,6 @@
         }
         .plan-card:hover::before { opacity: 1; }
         
-        /* Temas dos cartões */
         .card-starter { --theme-color: var(--neon-blue); }
         .card-pro { --theme-color: var(--neon-green); }
         .card-elite { --theme-color: var(--neon-purple); }
@@ -127,8 +125,10 @@
             width: 100%; padding: 15px; border-radius: 10px; border: none; font-size: 1.1rem; font-weight: 700;
             text-transform: uppercase; cursor: pointer; transition: 0.3s; transform: translateZ(30px);
             background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--theme-color);
+            display: flex; justify-content: center; align-items: center; gap: 10px;
         }
-        .plan-card:hover .buy-btn { background: var(--theme-color); color: #000; box-shadow: 0 0 20px var(--theme-color); }
+        .buy-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .plan-card:hover .buy-btn:not(:disabled) { background: var(--theme-color); color: #000; box-shadow: 0 0 20px var(--theme-color); }
         
         .badge {
             position: absolute; top: -15px; right: 20px; background: var(--theme-color); color: #000;
@@ -159,6 +159,9 @@
             background: #000; border: 1px solid var(--border-color); border-radius: 15px; padding: 25px;
             display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; transition: 0.3s;
         }
+        @media (max-width: 768px) {
+            .key-vault { flex-direction: column; gap: 15px; align-items: flex-start; }
+        }
         .key-vault:hover { border-color: var(--neon-green); box-shadow: 0 0 20px rgba(0, 255, 136, 0.1); }
         .key-info h3 { color: var(--neon-green); margin-bottom: 5px; }
         .key-string {
@@ -173,20 +176,20 @@
 
         .discord-btn {
             background: #5865F2; color: white; border: none; padding: 12px 25px; border-radius: 8px; font-weight: 600;
-            cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 10px;
+            cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 10px; text-decoration: none;
         }
         .discord-btn:hover { background: #4752C4; box-shadow: 0 0 20px rgba(88, 101, 242, 0.4); }
 
         /* === ADMIN PANEL === */
-        .admin-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
+        .admin-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
         .stat-card { background: var(--bg-card); border-left: 4px solid var(--neon-purple); padding: 20px; border-radius: 10px; }
         .stat-card h4 { color: var(--text-dim); font-size: 0.9rem; text-transform: uppercase; margin-bottom: 10px; }
         .stat-card h2 { font-size: 2.5rem; color: #fff; }
 
         .admin-table-container { background: var(--bg-card); border-radius: 15px; overflow-x: auto; padding: 20px; border: 1px solid var(--border-color); }
         table { width: 100%; border-collapse: collapse; text-align: left; }
-        th { padding: 15px; color: var(--neon-purple); text-transform: uppercase; font-size: 0.85rem; border-bottom: 1px solid var(--border-color); }
-        td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 0.95rem; }
+        th { padding: 15px; color: var(--neon-purple); text-transform: uppercase; font-size: 0.85rem; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
+        td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 0.95rem; white-space: nowrap; }
         tr:hover td { background: rgba(255,255,255,0.02); }
 
         /* === TOAST NOTIFICATIONS === */
@@ -198,14 +201,23 @@
             animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; position: relative; overflow: hidden;
         }
         .cyber-toast.error { border-color: #ff003c; }
+        .cyber-toast.error::after { background: #ff003c; }
         .cyber-toast::after {
             content: ''; position: absolute; bottom: 0; left: 0; height: 3px; width: 100%; background: var(--neon-green);
             animation: progress 3s linear forwards;
         }
-        .cyber-toast.error::after { background: #ff003c; }
         @keyframes slideIn { from { transform: translateX(120%); } to { transform: translateX(0); } }
         @keyframes fadeOut { to { opacity: 0; transform: translateY(-20px); } }
         @keyframes progress { from { width: 100%; } to { width: 0%; } }
+
+        /* Modal Carregando Pagamento */
+        #payment-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 9999; display: none;
+            justify-content: center; align-items: center; flex-direction: column; color: white;
+        }
+        .spinner { border: 4px solid rgba(255,255,255,0.1); border-top: 4px solid var(--neon-green); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom: 20px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
     </style>
 </head>
@@ -215,6 +227,13 @@
     <div class="cyber-grid"></div>
     <div class="glow-bg"></div>
     <div class="glow-bg purple"></div>
+
+    <!-- Tela de Carregamento MP -->
+    <div id="payment-overlay">
+        <div class="spinner"></div>
+        <h2 style="font-family: 'Space Grotesk'">Processando Pagamento...</h2>
+        <p style="color: var(--text-dim); margin-top: 10px;">Não feche esta página.</p>
+    </div>
 
     <!-- Navegação -->
     <nav>
@@ -264,7 +283,6 @@
             <p class="section-subtitle">Escolha o arsenal perfeito. Menos Input Lag, Mais FPS.</p>
 
             <div class="pricing-grid">
-                <!-- Plano 1 -->
                 <div class="plan-card card-starter" data-tilt>
                     <h3 class="plan-name">Starter</h3>
                     <div class="plan-price">R$25<span>/mês</span></div>
@@ -273,10 +291,9 @@
                         <li><i class="fa-solid fa-bolt"></i> Limpeza de Cache RAM</li>
                         <li><i class="fa-solid fa-xmark" style="color:red"></i> Sem Tweaks de Regedit</li>
                     </ul>
-                    <button class="buy-btn" onclick="comprarLicenca('Starter')">Adquirir Starter</button>
+                    <button class="buy-btn" onclick="iniciarCheckout('Starter', this)"><i class="fa-solid fa-cart-shopping"></i> Escolher Plano</button>
                 </div>
 
-                <!-- Plano 2 -->
                 <div class="plan-card card-pro" data-tilt>
                     <div class="badge">Mais Vendido</div>
                     <h3 class="plan-name">Pro Gamer</h3>
@@ -286,10 +303,9 @@
                         <li><i class="fa-solid fa-bolt"></i> Tweaks de Latência (Rede)</li>
                         <li><i class="fa-solid fa-bolt"></i> Otimização de GPU Básica</li>
                     </ul>
-                    <button class="buy-btn" onclick="comprarLicenca('Pro Gamer')">Adquirir Pro</button>
+                    <button class="buy-btn" onclick="iniciarCheckout('Pro Gamer', this)"><i class="fa-solid fa-cart-shopping"></i>Escolher Plano</button>
                 </div>
 
-                <!-- Plano 3 -->
                 <div class="plan-card card-elite" data-tilt>
                     <h3 class="plan-name">Elite</h3>
                     <div class="plan-price">R$70<span>/mês</span></div>
@@ -299,21 +315,20 @@
                         <li><i class="fa-solid fa-bolt"></i> Script de Debloat do Windows</li>
                         <li><i class="fa-solid fa-bolt"></i> Suporte Prioritário</li>
                     </ul>
-                    <button class="buy-btn" onclick="comprarLicenca('Elite')">Adquirir Elite</button>
+                    <button class="buy-btn" onclick="iniciarCheckout('Elite', this)"><i class="fa-solid fa-cart-shopping"></i> Escolher Plano</button>
                 </div>
 
-                <!-- Plano 4 -->
                 <div class="plan-card card-lifetime" data-tilt>
                     <div class="badge">Vitalício</div>
                     <h3 class="plan-name">God Mode</h3>
-                    <div class="plan-price">R$200<span>/único</span></div>
+                    <div class="plan-price">R$450<span>/único</span></div>
                     <ul class="plan-features">
                         <li><i class="fa-solid fa-bolt"></i> Todas as funções Elite</li>
                         <li><i class="fa-solid fa-bolt"></i> Pagamento Único</li>
                         <li><i class="fa-solid fa-bolt"></i> Atualizações Inclusas</li>
                         <li><i class="fa-solid fa-bolt"></i> Reset de HWID Grátis 1x/mês</li>
                     </ul>
-                    <button class="buy-btn" onclick="comprarLicenca('God Mode Vitalício')">Adquirir God Mode</button>
+                    <button class="buy-btn" onclick="iniciarCheckout('God Mode Vitalício', this)"><i class="fa-solid fa-cart-shopping"></i>Escolher Plano</button>
                 </div>
             </div>
         </section>
@@ -322,25 +337,20 @@
         <section id="dashboard" class="view-section">
             <h1 class="section-title">Seu <span style="color: var(--neon-blue);">Cofre de Keys</span></h1>
             <p class="section-subtitle">Aqui estão suas licenças ativas. Envie para o admin no Discord para baixar o software.</p>
-            
-            <div id="keys-container">
-                <!-- Keys renderizadas via JS -->
-            </div>
+            <div id="keys-container"></div>
         </section>
 
         <!-- SESSÃO: ADMIN -->
         <section id="admin" class="view-section">
             <h1 class="section-title">Comando <span style="color: var(--neon-purple);">Geral</span></h1>
-            
             <div class="admin-stats">
                 <div class="stat-card"><h4>Total de Vendas</h4><h2 id="st-vendas">0</h2></div>
                 <div class="stat-card"><h4>HWIDs Vinculados</h4><h2 id="st-hwids">0</h2></div>
                 <div class="stat-card">
                     <h4>Ação</h4>
-                    <button class="primary-btn" style="background:var(--neon-purple); padding:10px; font-size:14px;" onclick="carregarAdmin()">Atualizar Tabela</button>
+                    <button class="primary-btn" style="background:var(--neon-purple); padding:10px; font-size:14px; margin-top:5px;" onclick="carregarAdmin()">Atualizar Tabela</button>
                 </div>
             </div>
-
             <div class="admin-table-container">
                 <table>
                     <thead>
@@ -352,49 +362,57 @@
                             <th>Status HWID</th>
                         </tr>
                     </thead>
-                    <tbody id="admin-tbody">
-                        <!-- Tabela preenchida via JS -->
-                    </tbody>
+                    <tbody id="admin-tbody"></tbody>
                 </table>
             </div>
         </section>
 
     </div>
 
-    <!-- ========================================== -->
-    <!-- LÓGICA DO SISTEMA (FIREBASE + JS)          -->
-    <!-- ========================================== -->
+    <!-- FIREBASE E LÓGICA -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, query, where, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-        // 🚨 CONFIGURAÇÕES IMPORTANTES - COLOQUE SEUS DADOS 🚨
         const firebaseConfig = {
-            apiKey: "SUA_API_KEY_AQUI",
-            authDomain: "SEU_PROJETO.firebaseapp.com",
-            projectId: "SEU_PROJETO",
-            storageBucket: "SEU_PROJETO.appspot.com",
-            messagingSenderId: "SEU_SENDER",
-            appId: "SEU_APP_ID"
-        };
-        const ADMIN_EMAIL = "seu_email_admin@gmail.com"; 
-        const DISCORD_ID = "SEU_ID_DO_DISCORD"; // Ex: 123456789012345678
-        // 🚨 ================================================ 🚨
+            apiKey: "AIzaSyDwGAJ8PiB17sS3iu014NNExQlb-CqHt-Y",
+            authDomain: "ggop-61f0d.firebaseapp.com",
+            projectId: "ggop-61f0d",
+            storageBucket: "ggop-61f0d.firebasestorage.app",
+            messagingSenderId: "763024726465",
+            appId: "1:763024726465:web:d8766f9ffbc75fce20b740",
+            measurementId: "G-FHS24YB65E"
+        }; 
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
         let userLogado = null;
 
-        // --- SISTEMA DE UI E TOASTS ---
+        const ADMIN_EMAIL = "SuporteGGop@GGopsuport.com"; 
+        const DISCORD_ID = "SEU_ID_DO_DISCORD"; 
+
+        // ========================================================
+        // 🚨 LINKS DO MERCADO PAGO 🚨
+        const LINKS_MERCADO_PAGO = {
+            "Starter": "COLE_O_LINK_DO_MP_AQUI", 
+            "Pro Gamer": "COLE_O_LINK_DO_MP_AQUI", 
+            "Elite": "COLE_O_LINK_DO_MP_AQUI", 
+            "God Mode Vitalício": "COLE_O_LINK_DO_MP_AQUI"
+        };
+        // ========================================================
+
+        // Funções UI Base
         window.switchTab = (tabId) => {
+            // LOGIN DE ADMIN CORRIGIDO (Lower Case)
+            if (tabId === 'admin' && (!userLogado || userLogado.email.toLowerCase() !== ADMIN_EMAIL.toLowerCase())) return showToast("Acesso Negado.", true);
+            
             document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            
             document.getElementById(tabId).classList.add('active');
-            document.getElementById(`nav-${tabId}`).classList.add('active');
-
+            const navBtn = document.getElementById(`nav-${tabId}`);
+            if(navBtn) navBtn.classList.add('active');
             if(tabId === 'dashboard') carregarMinhasKeys();
             if(tabId === 'admin') carregarAdmin();
         };
@@ -405,27 +423,21 @@
             toast.className = `cyber-toast ${isError ? 'error' : ''}`;
             toast.innerHTML = `<i class="fa-solid ${isError ? 'fa-triangle-exclamation' : 'fa-circle-check'}"></i> ${msg}`;
             box.appendChild(toast);
-            setTimeout(() => {
-                toast.style.animation = 'fadeOut 0.3s forwards';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
+            setTimeout(() => { toast.style.animation = 'fadeOut 0.3s forwards'; setTimeout(() => toast.remove(), 300); }, 3000);
         };
 
-        // --- EFEITO 3D TILT NOS CARTÕES ---
+        // Efeito Tilt 3D
         document.querySelectorAll('.plan-card').forEach(card => {
             card.addEventListener('mousemove', e => {
                 let rect = card.getBoundingClientRect();
-                let x = e.clientX - rect.left - rect.width / 2;
-                let y = e.clientY - rect.top - rect.height / 2;
+                let x = e.clientX - rect.left - rect.width / 2; let y = e.clientY - rect.top - rect.height / 2;
                 card.style.transform = `perspective(1000px) rotateY(${x / 10}deg) rotateX(${-y / 10}deg) scale3d(1.02, 1.02, 1.02)`;
             });
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = `perspective(1000px) rotateY(0deg) rotateX(0deg) scale3d(1, 1, 1)`;
-            });
+            card.addEventListener('mouseleave', () => card.style.transform = `perspective(1000px) rotateY(0deg) rotateX(0deg) scale3d(1, 1, 1)`);
         });
 
-        // --- AUTENTICAÇÃO ---
-        onAuthStateChanged(auth, (user) => {
+        // Autenticação e Monitoramento
+        onAuthStateChanged(auth, async (user) => {
             userLogado = user;
             if (user) {
                 document.getElementById('nav-auth').classList.remove('visible');
@@ -434,10 +446,13 @@
                 document.getElementById('user-pill').style.display = 'flex';
                 document.getElementById('user-display').innerText = user.email.split('@')[0];
                 
-                if(user.email === ADMIN_EMAIL) document.getElementById('nav-admin').classList.add('visible');
+                // LOGIN DE ADMIN CORRIGIDO (Lower Case)
+                if(user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+                    document.getElementById('nav-admin').classList.add('visible');
+                }
                 
-                switchTab('store');
-                showToast("Sessão iniciada com sucesso.");
+                await verificarRetornoPagamento();
+                
             } else {
                 document.getElementById('nav-auth').classList.add('visible');
                 document.getElementById('nav-dashboard').classList.remove('visible');
@@ -448,127 +463,92 @@
         });
 
         window.authenticate = async (type) => {
-            const e = document.getElementById('email').value;
-            const p = document.getElementById('password').value;
+            const e = document.getElementById('email').value; const p = document.getElementById('password').value;
             if(!e || !p) return showToast("Insira e-mail e senha.", true);
-
             try {
                 if(type === 'login') await signInWithEmailAndPassword(auth, e, p);
-                else await createUserWithEmailAndPassword(auth, e, p);
-            } catch (err) {
-                showToast(err.message, true);
-            }
+                else { await createUserWithEmailAndPassword(auth, e, p); showToast("Conta registrada!"); }
+            } catch (err) { showToast(err.message.replace("Firebase: ", ""), true); }
         };
 
-        window.logOut = async () => {
-            await signOut(auth);
-            showToast("Desconectado.");
+        window.logOut = async () => { await signOut(auth); showToast("Desconectado."); };
+
+        window.iniciarCheckout = (plano, btn) => {
+            if(!userLogado) { switchTab('auth'); return showToast("Faça login antes de comprar.", true); }
+            localStorage.setItem("plano_pendente", plano);
+            window.location.href = LINKS_MERCADO_PAGO[plano];
         };
 
-        // --- SISTEMA DE COMPRA E GERAÇÃO DE KEY ---
-        window.comprarLicenca = async (plano) => {
-            if(!userLogado) return showToast("Faça login no sistema antes de comprar.", true);
+        const verificarRetornoPagamento = async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const statusPagamento = urlParams.get('status');
+            const planoPendente = localStorage.getItem("plano_pendente");
 
-            showToast(`Iniciando checkout seguro para: ${plano}...`);
-            
-            // Simulação: Delay de pagamento aprovado
-            setTimeout(async () => {
+            if (statusPagamento === 'approved' && planoPendente && userLogado) {
+                document.getElementById('payment-overlay').style.display = 'flex';
                 const key = 'GG-' + Array(4).fill(0).map(()=>Math.random().toString(36).substr(2,4).toUpperCase()).join('-');
+                
                 try {
                     await addDoc(collection(db, "licencas"), {
                         uid: userLogado.uid,
                         email: userLogado.email,
-                        plano: plano,
+                        plano: planoPendente,
                         key: key,
-                        hwid: "", // App C# ou Python preencherá isso depois
+                        hwid: "",
                         data: new Date().toLocaleDateString('pt-BR')
                     });
-                    showToast("Pagamento Confirmado! Key adicionada ao seu Cofre.");
+                    localStorage.removeItem("plano_pendente");
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                    document.getElementById('payment-overlay').style.display = 'none';
+                    showToast("Pagamento Confirmado! Key gerada.");
                     switchTab('dashboard');
                 } catch (e) {
-                    showToast("Erro de comunicação com o banco de dados.", true);
+                    document.getElementById('payment-overlay').style.display = 'none';
                 }
-            }, 2000);
+            } else if (statusPagamento) {
+                 window.history.replaceState({}, document.title, window.location.pathname);
+                 switchTab('store');
+            } else {
+                 switchTab('store');
+            }
         };
 
-        // --- RENDERIZAÇÃO DO COFRE DO CLIENTE ---
         window.carregarMinhasKeys = async () => {
             if(!userLogado) return;
             const container = document.getElementById('keys-container');
-            container.innerHTML = `<p style="color:var(--text-dim); text-align:center;">Descriptografando licenças...</p>`;
-
-            const q = query(collection(db, "licencas"), where("uid", "==", userLogado.uid));
-            const snap = await getDocs(q);
-
-            if(snap.empty) {
-                container.innerHTML = `<div class="key-vault" style="justify-content:center; color:var(--text-dim)">Nenhuma licença encontrada em sua conta.</div>`;
-                return;
-            }
-
-            container.innerHTML = "";
-            snap.forEach(doc => {
-                const d = doc.data();
-                const isLinked = d.hwid !== "";
-                const msgDiscord = `Eae admin, comprei o GG Optimization. \nPlano: **${d.plano}**\nMinha Key: **${d.key}**\nAguardo o envio do executável! 🚀`;
-
-                container.innerHTML += `
-                    <div class="key-vault">
-                        <div class="key-info">
-                            <h3>${d.plano}</h3>
-                            <div class="key-string">${d.key}</div>
-                            <div class="hwid-tag ${isLinked ? 'linked' : 'unlinked'}">
-                                <i class="fa-solid ${isLinked ? 'fa-lock' : 'fa-unlock-keyhole'}"></i> 
-                                ${isLinked ? 'HWID VINCULADO AO PC' : 'AGUARDANDO ATIVAÇÃO NO APP'}
+            container.innerHTML = `<p style="color:var(--text-dim); text-align:center;">Buscando licenças...</p>`;
+            try {
+                const q = query(collection(db, "licencas"), where("uid", "==", userLogado.uid));
+                const snap = await getDocs(q);
+                if(snap.empty) { container.innerHTML = `<div class="key-vault" style="justify-content:center; color:var(--text-dim)">Nenhuma licença encontrada.</div>`; return; }
+                container.innerHTML = "";
+                snap.forEach(doc => {
+                    const d = doc.data(); const isLinked = d.hwid && d.hwid !== "";
+                    container.innerHTML += `
+                        <div class="key-vault">
+                            <div class="key-info"><h3>${d.plano}</h3><div class="key-string">${d.key}</div>
+                                <div class="hwid-tag ${isLinked ? 'linked' : 'unlinked'}"><i class="fa-solid ${isLinked ? 'fa-lock' : 'fa-unlock-keyhole'}"></i> ${isLinked ? 'HWID VINCULADO' : 'AGUARDANDO ATIVAÇÃO'}</div>
                             </div>
-                        </div>
-                        <button class="discord-btn" onclick="resgatarDiscord('${msgDiscord}')">
-                            <i class="fa-brands fa-discord" style="font-size:20px;"></i> Resgatar Software
-                        </button>
-                    </div>
-                `;
-            });
+                        </div>`;
+                });
+            } catch (err) {}
         };
 
-        window.resgatarDiscord = (msg) => {
-            navigator.clipboard.writeText(msg).then(() => {
-                showToast("Mensagem copiada! Cole (Ctrl+V) no chat do Discord.");
-                setTimeout(() => window.open(`https://discord.com/users/${DISCORD_ID}`, '_blank'), 1500);
-            });
-        };
-
-        // --- PAINEL ADMIN ---
         window.carregarAdmin = async () => {
-            if(!userLogado || userLogado.email !== ADMIN_EMAIL) return;
+            if(!userLogado || userLogado.email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) return;
             const tbody = document.getElementById('admin-tbody');
-            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Buscando dados no servidor...</td></tr>`;
-
-            const snap = await getDocs(collection(db, "licencas"));
-            tbody.innerHTML = "";
-            
-            let totalVendas = 0;
-            let totalHwids = 0;
-
-            snap.forEach(doc => {
-                const d = doc.data();
-                totalVendas++;
-                if(d.hwid) totalHwids++;
-
-                tbody.innerHTML += `
-                    <tr>
-                        <td style="color:var(--text-dim)">${d.data}</td>
-                        <td>${d.email}</td>
-                        <td style="color:var(--neon-blue); font-weight:bold;">${d.plano}</td>
-                        <td style="font-family:monospace; color:var(--neon-green);">${d.key}</td>
-                        <td>${d.hwid ? `<span style="color:#ff003c; font-size:12px;">${d.hwid}</span>` : '<span style="color:var(--text-dim)">Vazio</span>'}</td>
-                    </tr>
-                `;
-            });
-
-            document.getElementById('st-vendas').innerText = totalVendas;
-            document.getElementById('st-hwids').innerText = totalHwids;
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Buscando dados...</td></tr>`;
+            try {
+                const snap = await getDocs(collection(db, "licencas"));
+                tbody.innerHTML = ""; let totalVendas = 0; let totalHwids = 0;
+                snap.forEach(doc => {
+                    const d = doc.data(); totalVendas++; if(d.hwid && d.hwid !== "") totalHwids++;
+                    tbody.innerHTML += `<tr><td>${d.data || "Data N/A"}</td><td>${d.email}</td><td style="color:var(--neon-blue); font-weight:bold;">${d.plano}</td><td style="font-family:monospace; color:var(--neon-green);">${d.key}</td><td>${(d.hwid && d.hwid !== "") ? d.hwid : 'Vazio'}</td></tr>`;
+                });
+                document.getElementById('st-vendas').innerText = totalVendas; document.getElementById('st-hwids').innerText = totalHwids;
+            } catch (err) {}
         };
 
-        // Iniciar
         switchTab('auth');
     </script>
 </body>
